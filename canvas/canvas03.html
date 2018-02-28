@@ -1,0 +1,28 @@
+<!doctype html>
+<html>
+<head>
+<title>This is an HTML canvas</title>
+<link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+<body>
+	<h1>This is an HTML canvas</h1>
+	<canvas id="asteroids" width="400" height="400"></canvas>
+	<script type="text/javascript" src="drawing.js"></script>
+	<script>
+		var context = document.getElementById("asteroids").getContext("2d");
+		draw_grid(context)
+
+		// draw_pacman(context, 200, 200, 150, Math.random());
+
+		var min_radius = 5;
+		var max_radius = 50;
+		do {
+			let x = context.canvas.width * Math.random();
+			let y = context.canvas.height * Math.random();
+			let radius = min_radius + (max_radius - min_radius) * Math.random();
+			draw_pacman(context, x, y, radius, Math.random());
+		} while(Math.random() < 0.9);
+</script>
+</body>
+</html>
+
