@@ -124,3 +124,71 @@ function draw_ship(ctx, radius, options) {
 	}
 	ctx.restore();
 }
+
+function draw_box (ctx, x, y, options) {
+	options = options || {};
+	x = x || 0;
+	y = y || 0;
+	let width = options.boxwidth || 20;
+	let height = options.boxheight || 20;
+	let xoffset = options.xoffset || 20;
+	let yoffset = options.yoffset || 20;
+	ctx.save();
+	ctx.strokeStyle = "#FFFFFF";
+	ctx.fillStyle = "#00FF00";
+	ctx.lineWidth = 1;
+	ctx.beginPath();
+
+	ctx.rect(
+		x * width + xoffset,
+		y * height + yoffset,
+		width,
+		height
+	);
+	ctx.fill();
+	ctx.stroke();
+	
+	ctx.restore();
+}
+
+function draw_asteroid (ctx, radius, segments, options) {
+	options = options || {};
+	var minradius = radius, maxradius = radius, noisyradius = radius;
+	ctx.strokeStyle = options.stroke || "white";
+	ctx.fillStyle = options.fill || "black";
+	ctx.save();
+	ctx.beginPath();
+	for (let i = 0; i < segments; i++) {
+		ctx.rotate(2 * Math.PI / segments);
+		// ctx.lineTo(radius, 0);
+		//A simplistic approach - we don't want totally random
+		// ctx.lineTo(radius * Math.random(), 0);
+		//This is much better, only a bit random
+		// ctx.lineTo(radius * 0.8 + radius * 0.4 * Math.random(), 0);
+		//This is neat, configurable and keeps the radius about right
+		noisyradius = radius + radius * options.noise * (Math.random() - 0.5) * 3;
+		if (noisyradius > maxradius) {
+			maxradius = noisyradius;
+		} else if (noisyradius < minradius) {
+			minradius = noisyradius;
+		}
+		ctx.lineTo(noisyradius, 0);
+	}
+	ctx.closePath();
+	ctx.fill();
+	ctx.stroke();
+	if (options.guide) {
+		ctx.lineWidth = 0.5;
+		ctx.beginPath();
+		ctx.arc(0, 0, radius, 0, 2 * Math.PI);
+		ctx.stroke();
+		ctx.lineWidth = 0.3;
+		ctx.beginPath();
+		ctx.arc(0, 0, minradius, 0, 2 * Math.PI);
+		ctx.stroke();
+		ctx.beginPath();
+		ctx.arc(0, 0, maxradius, 0, 2 * Math.PI);
+		ctx.stroke();
+	}
+	ctx.restore();
+}
